@@ -6,7 +6,7 @@ module.exports = {
     },
     mysql: {
         host: 'localhost',
-        port: 3306,
+        port: 3316,
         database: 'thirdpartydb',
         username: 'thirdpartydb',
         password: 'thirdpartydb'

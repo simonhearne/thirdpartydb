@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon index.js --exec babel-node",
-    "start": "NODE_ENV=production nodemon index.js --exec babel-node"
+    "dev": "./cloud_sql_proxy -instances=\"thirdpartydb:us-central1:thirdpartydb\"=tcp:3316; NODE_ENV=development nodemon index.js --exec babel-node",
+    "start": "NODE_ENV=production node index.js --exec babel-node"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -16,7 +16,9 @@
     "mysql": "^2.15.0",
     "zlib": "^1.0.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  },
   "author": "@simonhearne",
   "license": "ISC"
 }

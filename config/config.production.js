@@ -1,11 +1,11 @@
 module.exports = {
     isTest: false,
     server: {
-      port: 80,
-      host: 'localhost'
+      port: 8080,
+      host: 'thirdpartydb.appspot.com'
     },
     mysql: {
-        host: DB_HOST,
+        host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         database: process.env.DB_DBNAME,
         username: process.env.DB_USER,
