@@ -4,13 +4,18 @@ const routes = require('./routes')
 const mysql = require('mysql')
 const jwt = require('express-jwt')
 const compression = require('compression')
+const url = require('url')
 
 const config = require('./config.js')
 
 const app = express()
-app.use(express.static('public'))
+app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(compression())
+
+var swaggerUi = require('swagger-ui-express'),
+  swaggerDocument = require('./swagger.json')
+
 app.use(function(req,res,next){
   res.locals.connection = mysql.createConnection({
     host: config.mysql.host,
@@ -23,6 +28,9 @@ app.use(function(req,res,next){
 })
 
 app.use('/api/v1',routes)
+app.use('/api-docs/v1', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use(express.static('public'))
 
 app.listen(config.server.port, () => {
   console.log(`Server running on http://${config.server.host}:${config.server.port}`)
