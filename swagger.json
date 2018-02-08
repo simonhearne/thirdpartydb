@@ -10,7 +10,8 @@
         "url": "https://opensource.org/licenses/MIT"
       }
     },
-    "host": "thirdpartydb.appspot.com",
+    "host": "localhost:7555",
+    "live-host": "thirdpartydb.appspot.com",
     "basePath": "/api/v1",
     "tags": [
       {
@@ -27,7 +28,7 @@
       }
     ],
     "schemes": [
-      "https"
+      "http","https"
     ],
     "consumes": [
       "application/json"
@@ -53,18 +54,99 @@
           "summary": "Perform a regular expression lookup on a third-party URL",
           "responses": {
             "200": {
-              "description": "OK"
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/results"
+              }
+            },
+            "404": {
+              "description": "No matches"
             }
           }
         }
       },
-      "/users/{userId}": {
+      "/search/{searchterm}": {
+        "parameters": [
+        {
+          "name": "searchterm",
+          "in": "path",
+          "required": true,
+          "description": "Term to search for in third-party names, URLs and descriptions",
+          "type": "string"
+        }
+      ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Perform search",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/results"
+              }
+            },
+            "404": {
+              "description": "No matches"
+            }
+          }
+        }
+      },
+      "/domain/{domain}": {
+        "parameters": [
+        {
+          "name": "domain",
+          "in": "path",
+          "required": true,
+          "description": "domain with no protocol e.g. 'www.google-analytics.com'",
+          "type": "string"
+        }
+      ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Matches a third-party by exact match on the domain",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/result"
+              }
+            },
+            "404": {
+              "description": "No matches"
+            }
+          }
+        }
+      },
+      "/domains/": {
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "List all domains",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/results"
+              }
+            },
+            "404": {
+              "description": "No matches"
+            }
+          }
+        }
+      },
+      "/group/{groupid}": {
         "parameters": [
           {
-            "name": "userId",
+            "name": "groupid",
             "in": "path",
-            "required": true,
-            "description": "ID of user that we want to find",
+            "required": false,
+            "description": "Group ID",
             "type": "string"
           }
         ],
@@ -72,50 +154,126 @@
           "tags": [
             "consumers"
           ],
-          "summary": "Get user with given ID",
+          "summary": "Retrieve a group",
           "responses": {
             "200": {
-              "description": "User is found",
+              "description": "OK",
               "schema": {
-                "$ref": "#/definitions/User"
+                "$ref": "#/definitions/group"
               }
             }
           }
-        },
-        "delete": {
-          "summary": "Delete user with given ID",
+        }
+      },
+      "/groups/": {
+        "get": {
           "tags": [
             "consumers"
           ],
+          "summary": "List all groups",
           "responses": {
             "200": {
-              "description": "User is deleted",
+              "description": "OK",
               "schema": {
-                "$ref": "#/definitions/User"
+                "$ref": "#/definitions/groups"
               }
             }
           }
-        },
-        "put": {
-          "summary": "Update user with give ID",
+        }
+      },
+      "/category/{categoryid}": {
+        "parameters": [
+          {
+            "name": "categoryid",
+            "in": "path",
+            "required": false,
+            "description": "Category ID",
+            "type": "string"
+          }
+        ],
+        "get": {
           "tags": [
             "consumers"
           ],
-          "parameters": [
-            {
-              "name": "user",
-              "in": "body",
-              "description": "User with new values of properties",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          ],
+          "summary": "Retrieve a category",
           "responses": {
             "200": {
-              "description": "User is updated",
+              "description": "OK",
               "schema": {
-                "$ref": "#/definitions/User"
+                "$ref": "#/definitions/category"
+              }
+            }
+          }
+        }
+      },
+      "/categories/": {
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "List all categoires",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/categories"
+              }
+            }
+          }
+        }
+      },
+      "/company/{companyid}": {
+        "parameters": [
+          {
+            "name": "companyid",
+            "in": "path",
+            "required": false,
+            "description": "Company ID",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Retrieve a company",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/company"
+              }
+            }
+          }
+        }
+      },
+      "/companies/": {
+        "parameters": [
+          {
+            "name": "categoryid",
+            "in": "query",
+            "required": false,
+            "description": "Category ID",
+            "type": "string"
+          },
+          {
+            "name": "groupid",
+            "in": "query",
+            "required": false,
+            "description": "Group ID",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "List companies",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/companies"
               }
             }
           }
@@ -123,32 +281,117 @@
       }
     },
     "definitions": {
-      "User": {
+      "result": {
         "required": [
-          "email",
-          "_id"
+          "domain",
+          "product"
         ],
         "properties": {
-          "_id": {
-            "type": "string",
+          "id": {
+            "type": "number",
             "uniqueItems": true
           },
-          "email": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "lastName": {
+          "searchterm": {
             "type": "string"
           },
-          "firstName": {
+          "regex": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "groupname": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          }
+        }
+      },
+      "results": {
+        "type": "array",
+        "$ref": "#/definitions/result"
+      },
+      "group": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "categorycount": {
             "type": "string"
           }
         }
       },
-      "Users": {
+      "groups": {
         "type": "array",
-        "$ref": "#/definitions/User"
+        "$ref": "#/definitions/group"
+      },
+      "category": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "productcount": {
+            "type": "string"
+          }
+        }
+      },
+      "categories": {
+        "type": "array",
+        "$ref": "#/definitions/category"
+      },
+      "product": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "companyid": {
+            "type": "number"
+          },
+          "categoryid": {
+            "type": "number"
+          },
+          "groupid": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "products": {
+        "type": "array",
+        "$ref": "#/definitions/category"
       }
     }
   }
-  

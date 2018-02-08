@@ -5,7 +5,7 @@ routes.get('/domain/:domain', (req, res, next) => {
   res.locals.connection.query(`CALL domainsearch('${domain}')`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.get('/search/:search', (req, res, next) => {
@@ -13,7 +13,7 @@ routes.get('/search/:search', (req, res, next) => {
   res.locals.connection.query(`CALL urlSearch('%${search}%')`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.get('/lookup/:search', (req, res, next) => {
@@ -21,22 +21,25 @@ routes.get('/lookup/:search', (req, res, next) => {
   res.locals.connection.query(`CALL urlLookup('${search}')`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+    if (results[0].length == 0) {
+      res.status(404);  
+    }
+		res.json(results[0])
 	});
 })
 routes.get('/groups', (req, res) => {
   res.locals.connection.query(`CALL groups()`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
-routes.get('/group/:groupid', (req, res) => {
+routes.get('/groups/:groupid', (req, res) => {
   groupid = req.params.groupid;
   res.locals.connection.query(`CALL groupByID(${groupid})`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.get('/categories', (req, res) => {
@@ -45,15 +48,15 @@ routes.get('/categories', (req, res) => {
   res.locals.connection.query(query, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
-routes.get('/category/:categoryid', (req, res) => {
+routes.get('/categories/:categoryid', (req, res) => {
   categoryid = req.params.categoryid;
   res.locals.connection.query(`CALL categoryByID(${categoryid})`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.get('/companies', (req, res) => {
@@ -63,15 +66,15 @@ routes.get('/companies', (req, res) => {
   res.locals.connection.query(query, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
-routes.get('/company/:companyid', (req, res) => {
+routes.get('/companies/:companyid', (req, res) => {
   companyid = req.params.companyid;
   res.locals.connection.query(`CALL companyByID(${companyid})`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.get('/products', (req, res) => {
@@ -82,15 +85,15 @@ routes.get('/products', (req, res) => {
   res.locals.connection.query(query, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
-routes.get('/product/:productid', (req, res) => {
+routes.get('/products/:productid', (req, res) => {
   productid = req.params.productid;
   res.locals.connection.query(`CALL productByID(${productid})`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.all('/vote/:matchid/up', (req, res) => {
@@ -98,7 +101,7 @@ routes.all('/vote/:matchid/up', (req, res) => {
   res.locals.connection.query(`CALL voteup('${matchid}')`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 routes.all('/vote/:matchid/down', (req, res) => {
@@ -106,7 +109,7 @@ routes.all('/vote/:matchid/down', (req, res) => {
   res.locals.connection.query(`CALL votedown('${matchid}')`, function (error, results, fields) {
     if (error) throw error;
     res.set({'content-type':'application/json'})
-		res.send(JSON.stringify({"status": 200, "error": null, "response": results}))
+		res.json(results[0])
 	});
 })
 
