@@ -10,8 +10,7 @@
         "url": "https://opensource.org/licenses/MIT"
       }
     },
-    "host": "localhost:7555",
-    "live-host": "thirdpartydb.appspot.com",
+    "host": "thirdpartydb.appspot.com",
     "basePath": "/api/v1",
     "tags": [
       {
@@ -28,7 +27,7 @@
       }
     ],
     "schemes": [
-      "http","https"
+      "https"
     ],
     "consumes": [
       "application/json"
@@ -79,7 +78,7 @@
           "tags": [
             "consumers"
           ],
-          "summary": "Perform search",
+          "summary": "Perform a keyword search across company, product and description",
           "responses": {
             "200": {
               "description": "OK",
@@ -113,25 +112,6 @@
               "description": "OK",
               "schema": {
                 "$ref": "#/definitions/result"
-              }
-            },
-            "404": {
-              "description": "No matches"
-            }
-          }
-        }
-      },
-      "/domains/": {
-        "get": {
-          "tags": [
-            "consumers"
-          ],
-          "summary": "List all domains",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/results"
               }
             },
             "404": {
@@ -392,6 +372,28 @@
       "products": {
         "type": "array",
         "$ref": "#/definitions/category"
+      },
+      "company": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "productcount": {
+            "type": "number"
+          }
+        }
+      },
+      "companies": {
+        "type": "array",
+        "$ref": "#/definitions/company"
       }
     }
   }

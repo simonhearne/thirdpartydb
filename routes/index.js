@@ -34,7 +34,7 @@ routes.get('/groups', (req, res) => {
 		res.json(results[0])
 	});
 })
-routes.get('/groups/:groupid', (req, res) => {
+routes.get('/group/:groupid', (req, res) => {
   groupid = req.params.groupid;
   res.locals.connection.query(`CALL groupByID(${groupid})`, function (error, results, fields) {
     if (error) throw error;
@@ -51,7 +51,7 @@ routes.get('/categories', (req, res) => {
 		res.json(results[0])
 	});
 })
-routes.get('/categories/:categoryid', (req, res) => {
+routes.get('/category/:categoryid', (req, res) => {
   categoryid = req.params.categoryid;
   res.locals.connection.query(`CALL categoryByID(${categoryid})`, function (error, results, fields) {
     if (error) throw error;
@@ -69,7 +69,7 @@ routes.get('/companies', (req, res) => {
 		res.json(results[0])
 	});
 })
-routes.get('/companies/:companyid', (req, res) => {
+routes.get('/company/:companyid', (req, res) => {
   companyid = req.params.companyid;
   res.locals.connection.query(`CALL companyByID(${companyid})`, function (error, results, fields) {
     if (error) throw error;
@@ -88,7 +88,7 @@ routes.get('/products', (req, res) => {
 		res.json(results[0])
 	});
 })
-routes.get('/products/:productid', (req, res) => {
+routes.get('/product/:productid', (req, res) => {
   productid = req.params.productid;
   res.locals.connection.query(`CALL productByID(${productid})`, function (error, results, fields) {
     if (error) throw error;

@@ -14,7 +14,7 @@ app.use(bodyParser.json())
 app.use(compression())
 
 var swaggerUi = require('swagger-ui-express'),
-  swaggerDocument = require('./swagger.json')
+  swaggerDocument = require(`./config/${config.swagger}`)
 
 app.use(function(req,res,next){
   res.locals.connection = mysql.createConnection({

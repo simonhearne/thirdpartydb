@@ -10,5 +10,6 @@ module.exports = {
         database: 'thirdpartydb',
         username: 'thirdpartydb',
         password: 'thirdpartydb'
-    }
+    },
+    swagger: 'swagger.development.json'
   };

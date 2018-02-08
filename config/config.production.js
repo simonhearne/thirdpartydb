@@ -10,5 +10,6 @@ module.exports = {
         database: process.env.DB_DBNAME,
         username: process.env.DB_USER,
         password: process.env.DB_PASS
-    }
+    },
+    swagger: 'swagger.production.json'
   };

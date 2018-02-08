@@ -1,0 +1,400 @@
+
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Third-party Database",
+      "description": "Classification of third-party requests by product, company, category and group",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:7555",
+    "live-host": "thirdpartydb.appspot.com",
+    "basePath": "/api/v1",
+    "tags": [
+      {
+        "name": "consumers",
+        "description": "Open API for users to get information and submit votes"
+      },
+      {
+        "name": "contributors",
+        "description": "Limited API for users to submit new information about third-parties"
+      },
+      {
+        "name": "admins",
+        "description": "Locked API to administer the database, modify and delete entries"
+      }
+    ],
+    "schemes": [
+      "http","https"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+      "/lookup/{url}": {
+        "parameters": [
+        {
+          "name": "url",
+          "in": "path",
+          "required": true,
+          "description": "URL of third-party resource",
+          "type": "string"
+        }
+      ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Perform a regular expression lookup on a third-party URL",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/results"
+              }
+            },
+            "404": {
+              "description": "No matches"
+            }
+          }
+        }
+      },
+      "/search/{searchterm}": {
+        "parameters": [
+        {
+          "name": "searchterm",
+          "in": "path",
+          "required": true,
+          "description": "Term to search for in third-party names, URLs and descriptions",
+          "type": "string"
+        }
+      ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Perform a keyword search across company, product and description",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/results"
+              }
+            },
+            "404": {
+              "description": "No matches"
+            }
+          }
+        }
+      },
+      "/domain/{domain}": {
+        "parameters": [
+        {
+          "name": "domain",
+          "in": "path",
+          "required": true,
+          "description": "domain with no protocol e.g. 'www.google-analytics.com'",
+          "type": "string"
+        }
+      ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Matches a third-party by exact match on the domain",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/result"
+              }
+            },
+            "404": {
+              "description": "No matches"
+            }
+          }
+        }
+      },
+      "/group/{groupid}": {
+        "parameters": [
+          {
+            "name": "groupid",
+            "in": "path",
+            "required": false,
+            "description": "Group ID",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Retrieve a group",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/group"
+              }
+            }
+          }
+        }
+      },
+      "/groups/": {
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "List all groups",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/groups"
+              }
+            }
+          }
+        }
+      },
+      "/category/{categoryid}": {
+        "parameters": [
+          {
+            "name": "categoryid",
+            "in": "path",
+            "required": false,
+            "description": "Category ID",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Retrieve a category",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/category"
+              }
+            }
+          }
+        }
+      },
+      "/categories/": {
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "List all categoires",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/categories"
+              }
+            }
+          }
+        }
+      },
+      "/company/{companyid}": {
+        "parameters": [
+          {
+            "name": "companyid",
+            "in": "path",
+            "required": false,
+            "description": "Company ID",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "Retrieve a company",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/company"
+              }
+            }
+          }
+        }
+      },
+      "/companies/": {
+        "parameters": [
+          {
+            "name": "categoryid",
+            "in": "query",
+            "required": false,
+            "description": "Category ID",
+            "type": "string"
+          },
+          {
+            "name": "groupid",
+            "in": "query",
+            "required": false,
+            "description": "Group ID",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "consumers"
+          ],
+          "summary": "List companies",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/companies"
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "result": {
+        "required": [
+          "domain",
+          "product"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "searchterm": {
+            "type": "string"
+          },
+          "regex": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "groupname": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          }
+        }
+      },
+      "results": {
+        "type": "array",
+        "$ref": "#/definitions/result"
+      },
+      "group": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "categorycount": {
+            "type": "string"
+          }
+        }
+      },
+      "groups": {
+        "type": "array",
+        "$ref": "#/definitions/group"
+      },
+      "category": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "productcount": {
+            "type": "string"
+          }
+        }
+      },
+      "categories": {
+        "type": "array",
+        "$ref": "#/definitions/category"
+      },
+      "product": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "companyid": {
+            "type": "number"
+          },
+          "categoryid": {
+            "type": "number"
+          },
+          "groupid": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "products": {
+        "type": "array",
+        "$ref": "#/definitions/category"
+      },
+      "company": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "productcount": {
+            "type": "number"
+          }
+        }
+      },
+      "companies": {
+        "type": "array",
+        "$ref": "#/definitions/company"
+      }
+    }
+  }
