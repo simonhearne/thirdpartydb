@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "./cloud_sql_proxy -instances=\"thirdpartydb:us-central1:thirdpartydb\"=tcp:3316; NODE_ENV=development nodemon index.js --exec babel-node",
+    "dev": "./cloud_sql_proxy -instances=\"thirdpartydb:us-central1:thirdpartydb\"=tcp:3316 | NODE_ENV=development nodemon index.js --exec babel-node",
     "start": "NODE_ENV=production node index.js --exec babel-node"
   },
   "dependencies": {
