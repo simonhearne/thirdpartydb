@@ -1,6 +1,6 @@
 const apiLookup = function(type,query) {
     if (!(type in ['domain','lookup','search']) && (query.length<5)) return false;
-    let url = `api/v1/${type}/${query}`;
+    let url = `api/v1/${type}/${encodeURIComponent(query)}`;
     document.getElementById('query-url').innerHTML = `<a href="${window.location.href+url}">${window.location.href+url}</a>`;
     fetch(url)
         .then((res) => {

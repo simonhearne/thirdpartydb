@@ -227,3 +227,6 @@ input[type=range] {
 #query-url a {
     text-decoration:none;
 }
+input::placeholder {
+    color: #ccc;
+}
